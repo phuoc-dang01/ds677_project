@@ -3,15 +3,20 @@ from tree_sitter import Language, Parser
 Language.build_library(
     'build/lang.so',
     [
-        # './tree-sitter-python',
         './tree-sitter-java'
     ]
 )
+
+
 LANGUAGE = Language('build/lang.so', 'java')
 
 
+# QUERY = LANGUAGE.query("""
+# (function_definition name: (identifier) @fn-name)
+# """)
+
 QUERY = LANGUAGE.query("""
-(function_definition name: (identifier) @fn-name)
+    (method_declaration name: (identifier) @method-name)
 """)
 
 
@@ -24,7 +29,7 @@ def get_fn_name(code, parser=global_parser):
     tree = parser.parse(src)
     node = tree.root_node
     for cap, typ in QUERY.captures(node):
-        if typ == "fn-name":
+        if typ == "method-name":
             return node_to_string(src, cap)
     return None
 
@@ -49,18 +54,23 @@ def does_have_return(src, parser=global_parser):
     root = tree.root_node
     captures = RETURN_QUERY.captures(root)
     for node, _ in captures:
-        # if it doesn't have an argument, it's not a return with a value
+        # If it doesn't have an argument, it's not a return with a value
         if len(node.children) <= 1:  # includes "return" itself
             continue
         else:
             return True
-
     return False
 
-
 if __name__ == "__main__":
+    # Example Java code
     code = """
-import ble
-from a import b
-"""
-    print(global_parser.parse(bytes(code, "utf8")).root_node.sexp())
+    public class Example {
+        public void sayHello() {
+            System.out.println("Hello, world!");
+        }
+
+        public int add(int a, int b) {
+            return a + b;
+        }
+    }
+    """

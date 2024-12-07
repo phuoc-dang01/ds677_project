@@ -3,6 +3,9 @@
 /*.jsonl
 /*.json
 /*.bak
+cache/
+datasets/
+sampled_dataset*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
