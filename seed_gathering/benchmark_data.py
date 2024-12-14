@@ -83,11 +83,11 @@ def apps_solutions():
 
 
 def multipl_e_docstrings():
-    languages = [
-        "cpp", "cs", "d", "go", "java", "jl", "js", "lua", "php", "pl", "py", "r",
-        "rb", "rkt", "rs", "scala", "sh", "swift", "ts"
-    ]
-    # languages = ["py", "java", "js"]
+    # languages = [
+    #     "cpp", "cs", "d", "go", "java", "jl", "js", "lua", "php", "pl", "py", "r",
+    #     "rb", "rkt", "rs", "scala", "sh", "swift", "ts"
+    # ]
+    languages = ["py", "java"]
     src_datas = ["humaneval", "mbpp"]
     variations = ["", "-remove"]
     data = []
