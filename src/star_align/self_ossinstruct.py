@@ -396,7 +396,7 @@ def build_kwargs(instruct_mode: InstructMode, example: dict) -> dict[str, str]:
         kwargs["snippet"] = example["seed"]
     elif instruct_mode == "C->I":
         lang = example.get("data_dir", "dummy_key_not_in_example")
-        language = LANGUAGE_MAP.get(lang, "Python")
+        language = LANGUAGE_MAP.get(lang, "Java")
         property = Property.random_exercise(example["concepts"], language=language)
         property_prompt = property.prompt()
         # 45 / 152 are the min/max word lengths in the fewshot examples
