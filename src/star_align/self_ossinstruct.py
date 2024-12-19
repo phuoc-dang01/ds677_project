@@ -13,6 +13,16 @@ from tqdm.auto import tqdm
 from transformers import HfArgumentParser
 
 import star_align
+import sys
+import os
+
+import torch
+torch.cuda.empty_cache()
+
+
+# Add the src/ directory to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 
 InstructMode = Literal["I->R", "S->C", "C->I", "S->I"]
 
@@ -426,8 +436,25 @@ def get_readable_prefix(instruct_mode: InstructMode, example: dict) -> str:
     return prefix
 
 
+
+
+
 async def main():
+    ###
+    # Hard-coded model and seed paths
+    MODEL_PATH = "/project/ahoover/pd468/starcoder2_15b_local_2"
+    SEED_FILE_PATH = "/project/ahoover/pd468/starscoder/datasets/Dec14_seed_subset.json"
+
+    # Load the model
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    print(f"Loading model from {MODEL_PATH}...")
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+    model = AutoModelForCausalLM.from_pretrained(MODEL_PATH, device_map="auto")
+    ###
+    
     args = cast(Args, HfArgumentParser(Args).parse_args_into_dataclasses()[0])
+    
     # Sanity check
     assert args.num_batched_requests % args.async_micro_batch_size == 0
     if args.async_micro_batch_size > 1:
